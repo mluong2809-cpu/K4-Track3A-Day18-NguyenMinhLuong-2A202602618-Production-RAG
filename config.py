@@ -4,9 +4,13 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+if os.getenv("GEMINI_ENV_FILE"):
+    load_dotenv(os.environ["GEMINI_ENV_FILE"], override=False)
 
-# --- API Keys ---
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+# --- Gemini API ---
+GEMINI_API_KEY = (os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or "").strip()
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 
 # --- Qdrant ---
 QDRANT_HOST = "localhost"

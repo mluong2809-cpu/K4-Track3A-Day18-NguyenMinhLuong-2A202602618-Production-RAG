@@ -59,18 +59,21 @@ def main():
         print(f"\n{'Metric':<25} {'Basic':>8} {'Production':>12} {'Δ':>8}")
         print("-" * 55)
         for m in ["faithfulness", "answer_relevancy", "context_precision", "context_recall"]:
-            n = naive.get("aggregate", {}).get(m, 0)
-            p = prod.get("aggregate", {}).get(m, 0)
-            d = p - n
-            status = "✓" if p >= 0.75 else " "
-            print(f"{status} {m:<23} {n:>8.4f} {p:>12.4f} {d:>+8.4f}")
+            n = naive.get("aggregate", {}).get(m)
+            p = prod.get("aggregate", {}).get(m)
+            if n is None or p is None:
+                print(f"  {m:<23} {'N/A':>8} {'N/A':>12} {'N/A':>8}")
+            else:
+                d = p - n
+                status = "✓" if p >= 0.75 else " "
+                print(f"{status} {m:<23} {n:>8.4f} {p:>12.4f} {d:>+8.4f}")
 
     elapsed = time.time() - start
     print(f"\n⏱️  Total time: {elapsed:.1f}s")
     print("\n📋 Next steps:")
-    print("  1. Điền analysis/failure_analysis.md")
-    print("  2. Viết analysis/reflections/reflection_[HọTên].md")
-    print("  3. Chạy: python check_lab.py")
+    if prod_results.get("status") != "evaluated":
+        print("  Cung cấp GEMINI_API_KEY hợp lệ và trọng số BGE, rồi chạy lại để lấy điểm RAGAS thật.")
+    print("  Kiểm tra phân tích lỗi và chạy: python check_lab.py")
 
 
 if __name__ == "__main__":
